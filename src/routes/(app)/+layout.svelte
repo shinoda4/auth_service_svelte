@@ -8,13 +8,23 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<nav>
-	{#if (data.isAuthenticated)}
-		<a href="/welcome">Welcome Page</a>
+<nav class="app-nav">
+	{#if data.isAuthenticated}
+		<div>
+			<a href="/welcome">Welcome Page</a>
+		</div>
 		<a href="/logout">Logout</a>
 	{:else}
+		<div></div>
 		<a href="/login">Login</a>
 	{/if}
 </nav>
 
 {@render children()}
+
+<style lang="scss">
+	.app-nav {
+		display: flex;
+		justify-content: space-between;
+	}
+</style>

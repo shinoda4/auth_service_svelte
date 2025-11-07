@@ -1,5 +1,5 @@
-import type { LayoutServerLoad } from '../../../.svelte-kit/types/src/routes/$types';
 import { env } from '$env/dynamic/private';
+import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ cookies, locals }) => {
 	const accessToken = cookies.get('access');
@@ -11,7 +11,7 @@ export const load: LayoutServerLoad = async ({ cookies, locals }) => {
 	}
 
 	try {
-		const res = await fetch(`${env.AUTH_SERVICE_URL}/api/me/`, {
+		const res = await fetch(`${env.AUTH_SERVICE_URL}/api/auth/users/me/`, {
 			headers: { Authorization: `Bearer ${accessToken}` }
 		});
 
