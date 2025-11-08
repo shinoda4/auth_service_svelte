@@ -11,6 +11,7 @@
 <nav class="app-nav">
 	{#if data.isAuthenticated}
 		<div>
+			<a href="/">Home</a>
 			<a href="/welcome">Welcome Page</a>
 		</div>
 		<a href="/logout">Logout</a>

@@ -1,7 +1,15 @@
 import { env } from '$env/dynamic/private';
+import { isAuthenticated } from '$lib/utils/auth';
 import { parseErrorJson } from '$lib/utils/parse';
 import type { Actions } from './$types';
 import { fail, redirect } from '@sveltejs/kit';
+
+export const load = async ({ cookies }) => {
+    const authenticated = isAuthenticated(cookies);
+    if (authenticated) {
+        throw redirect(303, '/');
+    }
+}
 
 export const actions: Actions = {
     login: async ({ request, fetch, cookies }) => {

@@ -1,4 +1,5 @@
 import { env } from '$env/dynamic/private';
+import type { Cookies } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ cookies, locals }) => {
@@ -12,10 +13,13 @@ export const load: LayoutServerLoad = async ({ cookies, locals }) => {
 				expired: false
 			};
 		}
-		return {
-			user: null,
-			isAuthenticated: false,
-			expired: true
+		const refreshed = await refreshJWTToken(cookies);
+		if (!refreshed) {
+			return {
+				user: null,
+				isAuthenticated: false,
+				expired: false
+			};
 		}
 	}
 
@@ -46,3 +50,26 @@ export const load: LayoutServerLoad = async ({ cookies, locals }) => {
 		};
 	}
 };
+
+
+const refreshJWTToken = async (cookie: Cookies) => {
+	if (!cookie.get('refresh')) {
+		return false
+	}
+	const refresh = cookie.get('refresh')
+	try {
+		const res = await fetch(`${env.AUTH_SERVICE_URL}/api/auth/jwt/refresh/`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ refresh })
+		});
+		if (!res.ok) {
+			return false
+		}
+		const data = await res.json();
+		cookie.set('access', data.access, { httpOnly: true, path: '/' });
+		return true
+	} catch (err) {
+		return false
+	}
+}
