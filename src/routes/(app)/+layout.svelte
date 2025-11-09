@@ -13,6 +13,7 @@
 		<div>
 			<a href="/">Home</a>
 			<a href="/welcome">Welcome Page</a>
+			<a href="/services">Services</a>
 		</div>
 		<a href="/logout">Logout</a>
 	{:else}

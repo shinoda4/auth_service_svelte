@@ -6,13 +6,13 @@ import { fail, redirect } from '@sveltejs/kit';
 
 export const load = async ({ cookies }) => {
     const authenticated = isAuthenticated(cookies);
-    if (authenticated) {
+    if (await authenticated) {
         throw redirect(303, '/');
     }
 }
 
 export const actions: Actions = {
-    login: async ({ request, fetch, cookies }) => {
+    login: async ({ request, cookies }) => {
         const formData = await request.formData();
         const username = formData.get('username')?.toString();
         const password = formData.get('password')?.toString();
@@ -26,8 +26,10 @@ export const actions: Actions = {
 
         const res = await fetch(`${env.AUTH_SERVICE_URL}/api/auth/jwt/create/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: body
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body,
         });
 
         if (!res.ok) {
@@ -45,7 +47,6 @@ export const actions: Actions = {
             path: '/',
             sameSite: 'strict',
             secure: true,
-            maxAge: 60 * 15 // 15 minutes
         });
 
         cookies.set('refresh', refreshToken, {
@@ -53,7 +54,6 @@ export const actions: Actions = {
             path: '/',
             sameSite: 'strict',
             secure: true,
-            maxAge: 60 * 60 * 24 * 7 // 7 days
         });
 
         throw redirect(303, `/login/success?username=${encodeURIComponent(username)}`);

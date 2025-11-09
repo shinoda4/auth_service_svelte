@@ -4,8 +4,6 @@
 	let username = page.url.searchParams.get('username') || 'User';
 </script>
 
-<h2>Successful Login</h2>
+<h2>Error Login</h2>
 
-<p>Welcome, {username}!</p>
-
-<a href="/">Go to Home Page</a>
+<a href="/login">Go to Login Page</a>
